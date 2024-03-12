@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\GroupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,11 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('otpVerify', 'otpVerify');
     Route::post('logout', 'logout');
     Route::post('refresh', 'refresh');
+});
+
+Route::controller(GroupController::class)->prefix('group')->group(function () {
+    Route::post('create', 'createGroup');
+    Route::post('getAllByUserID', 'getAllByUserID');
 });
 
 
