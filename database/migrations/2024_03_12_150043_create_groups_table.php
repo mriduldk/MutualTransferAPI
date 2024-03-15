@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('group_icon_url')->nullable();
             $table->string('group_color')->nullable();
             $table->string('group_created_date_time_String')->nullable();
-            $table->double('group_created_date_time_Long')->nullable();
+            $table->bigInteger('group_created_date_time_Long')->nullable();
             $table->string('group_description')->nullable();
             $table->boolean('group_is_deleted')->default(false);
             $table->boolean('group_is_pinned')->default(false);
