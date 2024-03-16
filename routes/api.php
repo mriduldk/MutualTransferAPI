@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-Route::controller(AuthController::class)->group(function () {
+Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('checkUserPhoneNumber', 'checkUserPhoneNumber');
     Route::post('otpVerify', 'otpVerify');
     Route::post('logout', 'logout');
