@@ -62,7 +62,7 @@ class ExpensesContactController extends Controller
                 'contact_amount_get',
                 'contact_amount_give',
                 'contact_amount_get_from',
-                'amount_give_to',
+                'amount_give_to as amount_give_to_String',
                 'fk_expenses_id',
                 'contact_created_by',
                 'contact_created_on',
