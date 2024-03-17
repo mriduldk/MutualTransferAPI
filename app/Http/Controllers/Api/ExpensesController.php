@@ -18,7 +18,7 @@ class ExpensesController extends Controller
         $expenses->expenses_id = $request->expenses_id;
         $expenses->expenses_amount = $request->expenses_amount;
         $expenses->expenses_description = $request->expenses_description;
-        $expenses->expenses_date_time = $request->expenses_date_time;
+        //$expenses->expenses_date_time = $request->expenses_date_time;
         $expenses->expenses_date = $request->expenses_date;
         $expenses->expenses_group_id = $request->expenses_group_id;
         
