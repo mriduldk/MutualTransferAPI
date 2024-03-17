@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Expenses;
+use App\Models\ExpensesContact;
 use \Carbon\Carbon;
 
 class ExpensesController extends Controller
@@ -52,8 +53,18 @@ class ExpensesController extends Controller
 
         $expenses = Expenses::where('expenses_is_deleted', 0)
             ->where('expenses_group_id', $request->expenses_group_id)
-            ->with('expensesContacts')
             ->get();
+
+            // Manually map expenses_contacts data into each expenses object
+            $expenses->each(function ($expense) {
+
+                $expensesContact = ExpensesContact::where('contact_is_deleted', 0)
+                    ->where('fk_expenses_id', $expense->expenses_id)
+                    ->get();
+
+                $expense->contactLists = $expensesContact->toArray();
+                //unset($expense->expensesContacts); 
+            });
 
         return response()->json([
             'message' => 'Expenses fetched successfully',
