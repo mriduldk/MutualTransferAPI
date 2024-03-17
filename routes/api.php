@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\ExpensesController;
+use App\Http\Controllers\Api\ExpensesContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,11 @@ Route::controller(GroupController::class)->prefix('group')->group(function () {
 Route::controller(ExpensesController::class)->prefix('expenses')->group(function () {
     Route::post('create', 'createExpenses');
     Route::post('getAllByGroupID', 'getAllByGroupID');
+});
+
+Route::controller(ExpensesContactController::class)->prefix('expensesContact')->group(function () {
+    Route::post('create', 'createExpensesContact');
+    Route::post('getAllByExpensesID', 'getAllByExpensesID');
 });
 
 

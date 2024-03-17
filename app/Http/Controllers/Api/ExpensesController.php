@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\Expenses;
 use \Carbon\Carbon;
 
-
 class ExpensesController extends Controller
 {
     
