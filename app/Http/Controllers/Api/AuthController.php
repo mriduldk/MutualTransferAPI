@@ -22,20 +22,12 @@ class AuthController extends Controller
     public function checkUserPhoneNumber(Request $request)
     {
         $request->validate([
-            'phone' => 'required|string|max:10|unique:users',
+            'phone' => 'required|string|max:10',
         ]);
 
         $user_exists = User::where('is_delete', 0)->where('phone', $request->phone)->first();
 
         if(empty($user_exists)){
-
-            // $user = User::create([
-            //     'user_id' => '123123123123',//Str::uuid()->toString(),
-            //     'phoness' => $request->phone,
-            //     'otp' => '1234',
-            //     'otp_valid_upto' => ,
-            // ]);
-
 
             $user = new User();
             $user->user_id = Str::uuid()->toString();
@@ -47,36 +39,30 @@ class AuthController extends Controller
 
             return response()->json([
                 'message' => 'User created successfully',
+                'status' => 200,
                 'user' => $user
             ]);
 
         }
         else{
 
-            if($user->is_active == 0){
+            if($user_exists->is_active == 0){
 
-                return response()->json(['message' => 'User is not active.',], 403);
+                return response()->json(['message' => 'User is not active.', 'status' => 403]);
             }
             else{
 
-                $credentials = $request->only('phone');
-
-                $token = Auth::attempt($credentials);
-                
-                if (!$token) {
-                    return response()->json([
-                        'message' => 'Unauthorized',
-                    ], 401);
-                }
-
-                $user = Auth::user();
+                $user_exists->otp = '1234';
+                $user_exists->otp_valid_upto = Carbon::now()->addMinutes(10)->toDateTimeString();
+        
+                $user_exists->save();
+    
                 return response()->json([
-                    'user' => $user,
-                    'authorization' => [
-                        'token' => $token,
-                        'type' => 'bearer',
-                    ]
+                    'message' => 'OTP sent to phone number',
+                    'status' => 200,
+                    'user' => $user_exists
                 ]);
+               
             }
         }
     }
@@ -95,21 +81,30 @@ class AuthController extends Controller
 
             return response()->json([
                 'message' => 'User not found.',
-            ], 403);
+                'status' => 403,
+                'user' => null
+            ]);
 
         }
         else{
 
             if($user->is_active == 0){
 
-                return response()->json(['message' => 'User is not active.',], 403);
+                return response()->json([
+                    'message' => 'User is not active.',
+                    'status' => 403,
+                    'user' => null
+                ]);
             }
             else{
 
                 if($user->otp_valid_upto >= Carbon::now()->addMinutes(10)->toDateTimeString()){
+
                     return response()->json([
                         'message' => 'OTP is expired. Please resend OTP.',
-                    ], 403);
+                        'status' => 403,
+                        'user' => null
+                    ]);
                 }
 
                 if($user->otp == $request->otp){
@@ -119,18 +114,20 @@ class AuthController extends Controller
                     $user->save();
                     
                     return response()->json([
-                        'user' => $user,
-                        'authorization' => [
-                            //'token' => $token,
-                            'type' => 'bearer',
-                        ]
+                        'message' => 'OTP verified successfully',
+                        'status' => 200,
+                        'user' => $user
                     ]);
 
                 }
                 else{
+
                     return response()->json([
                         'message' => 'Invalid OTP. Try again.',
-                    ], 403);
+                        'status' => 403,
+                        'user' => null
+                    ]);
+
                 }
                 
             }
