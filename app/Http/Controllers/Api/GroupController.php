@@ -34,14 +34,16 @@ class GroupController extends Controller
 
             return response()->json([
                 'message' => 'Group created successfully',
-                'group' => $group_new
+                'status' => 200
             ]);
 
         }
         else{
+
             return response()->json([
                 'message' => 'Group name already exists',
-            ], 403);
+                'status' => 403
+            ]);
         }
 
     }
