@@ -60,6 +60,28 @@ class ExpensesController extends Controller
 
                 $expensesContact = ExpensesContact::where('contact_is_deleted', 0)
                     ->where('fk_expenses_id', $expense->expenses_id)
+                    ->select([
+                        'contact_id',
+                        'contact_name',
+                        'contact_number',
+                        'contact_paidBy',
+                        'contact_excludedFromEqualShare',
+                        'contact_paidAmount',
+                        'contact_equalShare',
+                        'contact_extraShare',
+                        'contact_totalShare',
+                        'contact_amount_get',
+                        'contact_amount_give',
+                        'contact_amount_get_from',
+                        'amount_give_to as amount_give_to_String',
+                        'fk_expenses_id',
+                        'contact_created_by',
+                        'contact_created_on',
+                        'contact_modified_by',
+                        'contact_modified_on',
+                        'contact_deleted_by',
+                        'contact_deleted_on'
+                    ])
                     ->get();
 
                 $expense->contactLists = $expensesContact->toArray();
