@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\ExpensesContact;
+
+
 class Expenses extends Model
 {
     use HasFactory;
@@ -36,6 +39,12 @@ class Expenses extends Model
         'expenses_deleted_on',
 
     ];
+
+    // Define relationship with ExpensesContact model
+    public function expensesContacts()
+    {
+        return $this->hasMany(ExpensesContact::class, 'fk_expenses_id');
+    }
 
 
 }

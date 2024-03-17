@@ -48,6 +48,21 @@ class ExpensesController extends Controller
 
     }
 
+    public function getAllByGroupIDWithContactDetails(Request $request){
+
+        $expenses = Expenses::where('expenses_is_deleted', 0)
+            ->where('expenses_group_id', $request->expenses_group_id)
+            ->with('expensesContacts')
+            ->get();
+
+        return response()->json([
+            'message' => 'Expenses fetched successfully',
+            'status' => 200,
+            'data' => $expenses
+        ]);
+
+    }
+
     public function getExpensesByID(Request $request){
 
         $expenses = Expenses::where('expenses_is_deleted', 0)
