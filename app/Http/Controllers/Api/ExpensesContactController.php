@@ -53,8 +53,8 @@ class ExpensesContactController extends Controller
                 'contact_id',
                 'contact_name',
                 'contact_number',
-                DB::raw('CAST(contact_paidBy AS BOOLEAN) AS contact_paidBy'), // Convert tinyint to boolean
-                DB::raw('CAST(contact_excludedFromEqualShare AS BOOLEAN) AS contact_excludedFromEqualShare'), // Convert tinyint to boolean
+                'contact_paidBy',
+                'contact_excludedFromEqualShare',
                 'contact_paidAmount',
                 'contact_equalShare',
                 'contact_extraShare',

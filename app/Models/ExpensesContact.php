@@ -42,4 +42,9 @@ class ExpensesContact extends Model
     ];
 
 
+    protected $casts = [
+        'contact_paidBy' => 'boolean',
+        'contact_excludedFromEqualShare' => 'boolean',
+    ];
+
 }
