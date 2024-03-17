@@ -54,7 +54,8 @@ class GroupController extends Controller
 
         return response()->json([
             'message' => 'Group fetched successfully',
-            'user' => $group
+            'status' => 200,
+            'data' => $group
         ]);
 
     }
