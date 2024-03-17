@@ -48,5 +48,19 @@ class ExpensesController extends Controller
 
     }
 
+    public function getExpensesByID(Request $request){
+
+        $expenses = Expenses::where('expenses_is_deleted', 0)
+            ->where('expenses_id', $request->expenses_id)
+            ->first();
+
+        return response()->json([
+            'message' => 'Expenses fetched successfully',
+            'status' => 200,
+            'data' => $expenses
+        ]);
+
+    }
+
 
 }
