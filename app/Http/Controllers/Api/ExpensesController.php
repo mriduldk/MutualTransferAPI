@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Group;
+use App\Models\Expenses;
 
 
 class ExpensesController extends Controller
