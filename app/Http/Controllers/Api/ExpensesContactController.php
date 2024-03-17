@@ -48,6 +48,28 @@ class ExpensesContactController extends Controller
 
         $expenses_contact = ExpensesContact::where('contact_is_deleted', 0)
             ->where('fk_expenses_id', $request->fk_expenses_id)
+            ->select([
+                'contact_id',
+                'contact_name',
+                'contact_number',
+                DB::raw('CAST(contact_paidBy AS BOOLEAN) AS contact_paidBy'), // Convert tinyint to boolean
+                DB::raw('CAST(contact_excludedFromEqualShare AS BOOLEAN) AS contact_excludedFromEqualShare'), // Convert tinyint to boolean
+                'contact_paidAmount',
+                'contact_equalShare',
+                'contact_extraShare',
+                'contact_totalShare',
+                'contact_amount_get',
+                'contact_amount_give',
+                'contact_amount_get_from',
+                'amount_give_to',
+                'fk_expenses_id',
+                'contact_created_by',
+                'contact_created_on',
+                'contact_modified_by',
+                'contact_modified_on',
+                'contact_deleted_by',
+                'contact_deleted_on'
+            ])
             ->get();
 
         return response()->json([
