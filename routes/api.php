@@ -40,6 +40,7 @@ Route::controller(ExpensesController::class)->prefix('expenses')->group(function
     Route::post('create', 'createExpenses');
     Route::post('getAllByGroupID', 'getAllByGroupID');
     Route::post('getAllByGroupIDWithContactDetails', 'getAllByGroupIDWithContactDetails');
+    Route::post('getAllByUserIDWithContactDetails', 'getAllByUserIDWithContactDetails');
     Route::post('getExpensesByID', 'getExpensesByID');
 });
 
