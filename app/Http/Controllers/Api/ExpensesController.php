@@ -149,7 +149,7 @@ class ExpensesController extends Controller
         $to = date($request->to);
 
         $expenses = Expenses::where('expenses_is_deleted', 0)
-            ->where('expenses_date', $request->expenses_created_by)
+            ->where('expenses_created_by', $request->expenses_created_by)
             ->whereBetween('expenses_date', [$from, $to])
             ->get();
 
