@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('expenses_amount')->nullable();
             $table->string('expenses_description')->nullable();
             $table->datetime('expenses_date_time')->nullable();
-            $table->string('expenses_date')->nullable();
+            $table->date('expenses_date')->nullable();
             $table->string('expenses_time')->nullable();
             $table->string('expenses_group_id')->nullable();
             $table->string('expenses_paidBy')->nullable();
