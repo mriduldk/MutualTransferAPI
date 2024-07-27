@@ -7,6 +7,10 @@ use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\ExpensesController;
 use App\Http\Controllers\Api\ExpensesContactController;
 
+use App\Http\Controllers\Api\UserDetailsController;
+use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\Api\PaymentController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -30,6 +34,31 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('logout', 'logout');
     Route::post('refresh', 'refresh');
 });
+
+
+Route::controller(UserDetailsController::class)->prefix('userDetails')->group(function () {
+    Route::post('savePersonalInformation', 'SaveUserPersonalInformation');
+    Route::post('SaveUserEmployeeDetails', 'SaveUserEmployeeDetails');
+    Route::post('SaveUserSchoolDetails', 'SaveUserSchoolDetails');
+    Route::post('ChangeActivelyLookingStatus', 'ChangeActivelyLookingStatus');
+});
+
+Route::controller(SearchController::class)->prefix('search')->group(function () {
+    Route::post('SearchPerson', 'SearchPerson');
+    Route::post('ViewPersonDetails', 'ViewPersonDetails');
+});
+
+
+Route::controller(PaymentController::class)->prefix('payment')->group(function () {
+    Route::post('SaveUserPayForAnotherUser', 'SaveUserPayForAnotherUser');
+});
+
+
+
+
+
+
+
 
 Route::controller(GroupController::class)->prefix('group')->group(function () {
     Route::post('create', 'createGroup');

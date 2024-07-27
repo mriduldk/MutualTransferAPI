@@ -21,7 +21,9 @@ class AuthController extends Controller
 
     public function checkUserPhoneNumber(Request $request)
     {
+
         $request->validate([
+            /** @query */
             'phone' => 'required|string|max:10',
         ]);
 
@@ -70,8 +72,11 @@ class AuthController extends Controller
     public function otpVerify(Request $request)
     {
         $request->validate([
+            /** @query */
             'phone' => 'required|string|max:10',
+            /** @query */
             'otp' => 'required|string|min:4|max:4',
+            /** @query */
             'fcm_token' => 'required|string',
         ]);
 
