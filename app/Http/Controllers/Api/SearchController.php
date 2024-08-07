@@ -78,13 +78,13 @@ class SearchController extends Controller
             return response()->json([
                 'message' => 'No matching records found',
                 'status' => 404,
-                'results' => []
+                'searchResult' => []
             ]);
         } else {
             return response()->json([
                 'message' => 'Records found',
                 'status' => 200,
-                'results' => $maskedResults
+                'searchResult' => $maskedResults
             ]);
         }
         
@@ -121,14 +121,14 @@ class SearchController extends Controller
                 $results->phone = $this->maskParameter($results->phone);
                 $results->employee_code = $this->maskParameter($results->employee_code);
                 $results->school_name = $this->maskParameter($results->school_name);
-                $results->ucide_code = $this->maskParameter($results->ucide_code);
+                $results->udice_code = $this->maskParameter($results->udice_code);
                 $results->school_address_vill = $this->maskParameter($results->school_address_vill);
             }
 
             return response()->json([
                 'message' => 'Records found',
                 'status' => 200,
-                'results' => $results
+                'personDetails' => $results
             ]);
             
         } else {
@@ -136,7 +136,7 @@ class SearchController extends Controller
             return response()->json([
                 'message' => 'No matching records found',
                 'status' => 404,
-                'results' => []
+                'personDetails' => []
             ]);
         }
         

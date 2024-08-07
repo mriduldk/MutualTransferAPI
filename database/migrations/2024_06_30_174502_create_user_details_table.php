@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('subject_type', 20)->nullable();
 
             $table->string('school_name', 200)->nullable();
-            $table->string('ucide_code', 200)->nullable();
+            $table->string('udice_code', 200)->nullable();
             $table->string('school_address_vill', 100)->nullable();
             $table->string('school_address_district', 40)->nullable();
             $table->string('school_address_block', 30)->nullable();
