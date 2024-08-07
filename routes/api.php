@@ -10,6 +10,10 @@ use App\Http\Controllers\Api\ExpensesContactController;
 use App\Http\Controllers\Api\UserDetailsController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\PaymentHistoryController;
+use App\Http\Controllers\Api\WalletOfferController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +56,17 @@ Route::controller(SearchController::class)->prefix('search')->group(function () 
 Route::controller(PaymentController::class)->prefix('payment')->group(function () {
     Route::post('SaveUserPayForAnotherUser', 'SaveUserPayForAnotherUser');
 });
+
+
+Route::controller(PaymentHistoryController::class)->prefix('paymentHistory')->group(function () {
+    Route::post('SavePaymentHistory', 'SavePaymentHistory');
+});
+
+Route::controller(WalletOfferController::class)->prefix('walletOffer')->group(function () {
+    Route::post('GetWalletOffers', 'GetWalletOffers');
+});
+
+
 
 
 

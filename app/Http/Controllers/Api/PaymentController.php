@@ -48,7 +48,7 @@ class PaymentController extends Controller
             return response()->json([
                 'message' => 'Payment Done',
                 'status' => 200,
-                'user' => $payment
+                'payment' => $payment
             ]);
 
         }
@@ -57,7 +57,7 @@ class PaymentController extends Controller
             return response()->json([
                 'message' => 'Already Paid',
                 'status' => 403,
-                'user' => null
+                'payment' => null
             ]);
 
         }

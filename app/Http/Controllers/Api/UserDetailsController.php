@@ -44,7 +44,7 @@ class UserDetailsController extends Controller
                 return response()->json([
                     'message' => 'User Details Not Found',
                     'status' => 400,
-                    'user' => null
+                    'userDetails' => null
                 ]);
     
             }
@@ -66,7 +66,7 @@ class UserDetailsController extends Controller
                 return response()->json([
                     'message' => 'User Details saved successfully',
                     'status' => 200,
-                    'user' => $userDetailsNew
+                    'userDetails' => $userDetailsNew
                 ]);
             }
 
@@ -85,7 +85,7 @@ class UserDetailsController extends Controller
             return response()->json([
                 'message' => 'User Details updated successfully',
                 'status' => 200,
-                'user' => $userDetails
+                'userDetails' => $userDetails
             ]);
 
         }
@@ -120,7 +120,7 @@ class UserDetailsController extends Controller
                 return response()->json([
                     'message' => 'User Details Not Found',
                     'status' => 400,
-                    'user' => null
+                    'userDetails' => null
                 ]);
     
             }
@@ -144,7 +144,7 @@ class UserDetailsController extends Controller
                 return response()->json([
                     'message' => 'User Details saved successfully',
                     'status' => 200,
-                    'user' => $userDetailsNew
+                    'userDetails' => $userDetailsNew
                 ]);
             }
 
@@ -164,7 +164,7 @@ class UserDetailsController extends Controller
             return response()->json([
                 'message' => 'User Details updated successfully',
                 'status' => 200,
-                'user' => $userDetails
+                'userDetails' => $userDetails
             ]);
 
         }
@@ -179,7 +179,7 @@ class UserDetailsController extends Controller
             /** @query */
             'school_name' => 'required|string|max:200',
             /** @query */
-            'ucide_code' => 'required|string|max:50',
+            'udice_code' => 'required|string|max:50',
             /** @query */
             'school_address_vill' => 'required|string|max:100',
             /** @query */
@@ -200,14 +200,14 @@ class UserDetailsController extends Controller
             return response()->json([
                 'message' => 'User Details Not Found',
                 'status' => 400,
-                'user' => null
+                'userDetails' => null
             ]);
 
         }
         else{
 
             $userDetails->school_name = $request->school_name;
-            $userDetails->ucide_code = $request->ucide_code;
+            $userDetails->udice_code = $request->udice_code;
             $userDetails->school_address_vill = $request->school_address_vill;
             $userDetails->school_address_district = $request->school_address_district;
             $userDetails->school_address_block = $request->school_address_block;
@@ -222,7 +222,7 @@ class UserDetailsController extends Controller
             return response()->json([
                 'message' => 'User Details updated successfully',
                 'status' => 200,
-                'user' => $userDetails
+                'userDetails' => $userDetails
             ]);
 
         }
@@ -246,7 +246,7 @@ class UserDetailsController extends Controller
             return response()->json([
                 'message' => 'User Details Not Found',
                 'status' => 400,
-                'user' => null
+                'userDetails' => null
             ]);
 
         }
@@ -262,7 +262,7 @@ class UserDetailsController extends Controller
             return response()->json([
                 'message' => 'User Details updated successfully',
                 'status' => 200,
-                'user' => $userDetails
+                'userDetails' => $userDetails
             ]);
 
         }
