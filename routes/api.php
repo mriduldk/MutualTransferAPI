@@ -12,6 +12,8 @@ use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PaymentHistoryController;
 use App\Http\Controllers\Api\WalletOfferController;
+use App\Http\Controllers\Api\DistrictController;
+use App\Http\Controllers\Api\BlockController;
 
 
 
@@ -66,6 +68,20 @@ Route::controller(WalletOfferController::class)->prefix('walletOffer')->group(fu
     Route::post('GetWalletOffers', 'GetWalletOffers');
 });
 
+Route::controller(DistrictController::class)->prefix('district')->group(function () {
+    Route::post('GetAllDistricts', 'GetAllDistricts');
+    Route::post('GetDistrictByName', 'GetDistrictByName');
+    Route::post('GetDistrictsByStateAndDistrictName', 'GetDistrictsByStateAndDistrictName');
+    Route::post('GetDistrictByState', 'GetDistrictByState');
+});
+
+
+Route::controller(BlockController::class)->prefix('block')->group(function () {
+    Route::post('GetAllBlocks', 'GetAllBlocks');
+    Route::post('GetBlocksByDistrict', 'GetBlocksByDistrict');
+    Route::post('GetBlocksByDistrictAndBlockName', 'GetBlocksByDistrictAndBlockName');
+    Route::post('GetBlocksByState', 'GetBlocksByState');
+});
 
 
 
