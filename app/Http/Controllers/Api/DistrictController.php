@@ -31,10 +31,10 @@ class DistrictController extends Controller
     public function GetDistrictByName(Request $request)
     {
 
-        $request->validate([
-            /** @query */
-            'district_name' => 'required|string|max:100',
-        ]);
+        // $request->validate([
+        //     /** @query */
+        //     'district_name' => 'required|string|max:100',
+        // ]);
 
         $district = District::where('is_delete', 0)->where('district_name', 'LIKE', '%' . $request->district_name . '%')->get();
 
@@ -49,12 +49,12 @@ class DistrictController extends Controller
     public function GetDistrictsByStateAndDistrictName(Request $request)
     {
 
-        $request->validate([
-            /** @query */
-            'state_id' => 'required|string|max:36',
-            /** @query */
-            'district_name' => 'required|string|max:200',
-        ]);
+        // $request->validate([
+        //     /** @query */
+        //     'state_id' => 'required|string|max:36',
+        //     /** @query */
+        //     'district_name' => 'required|string|max:200',
+        // ]);
 
         $district = District::where('is_delete', 0)
                         ->where('state_id', $request->state_id)
@@ -74,10 +74,10 @@ class DistrictController extends Controller
     public function GetDistrictByState(Request $request)
     {
 
-        $request->validate([
-            /** @query */
-            'state_id' => 'required|string|max:36',
-        ]);
+        // $request->validate([
+        //     /** @query */
+        //     'state_id' => 'required|string|max:36',
+        // ]);
 
         $district = District::where('is_delete', 0)->where('state_id', $request->state_id)->get();
 

@@ -31,10 +31,10 @@ class BlockController extends Controller
     public function GetBlocksByDistrict(Request $request)
     {
 
-        $request->validate([
-            /** @query */
-            'district_id' => 'required|string|max:36',
-        ]);
+        // $request->validate([
+        //     /** @query */
+        //     'district_id' => 'required|string|max:36',
+        // ]);
 
         $blocks = Block::where('is_delete', 0)->where('district_id', $request->district_id)->get();
 
@@ -49,12 +49,12 @@ class BlockController extends Controller
     public function GetBlocksByDistrictAndBlockName(Request $request)
     {
 
-        $request->validate([
-            /** @query */
-            'district_id' => 'required|string|max:36',
-            /** @query */
-            'block_name' => 'required|string|max:200',
-        ]);
+        // $request->validate([
+        //     /** @query */
+        //     'district_id' => 'required|string|max:36',
+        //     /** @query */
+        //     'block_name' => 'required|string|max:200',
+        // ]);
 
         $blocks = Block::where('is_delete', 0)
                         ->where('district_id', $request->district_id)
@@ -74,10 +74,10 @@ class BlockController extends Controller
     public function GetBlocksByState(Request $request)
     {
 
-        $request->validate([
-            /** @query */
-            'state_id' => 'required|string|max:36',
-        ]);
+        // $request->validate([
+        //     /** @query */
+        //     'state_id' => 'required|string|max:36',
+        // ]);
 
         $blocks = Block::where('is_delete', 0)->where('state_id', $request->state_id)->get();
 
