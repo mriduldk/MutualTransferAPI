@@ -122,7 +122,7 @@ class SearchController extends Controller
                 $join->on('user_details.fk_user_id', '=', 'payments.payment_done_for')
                      ->where('payments.payment_done_by', '=', $userId);
             })
-            ->where('fk_user_id', $request->person_user_id)
+            ->where('user_details_id', $request->person_user_id)
             ->first();
 
 
