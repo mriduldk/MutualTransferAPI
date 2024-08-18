@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 
 use App\Models\UserDetails;
 use App\Models\Payment;
+use App\Models\PaymentConfig;
 
 
 class SearchController extends Controller
@@ -21,20 +22,30 @@ class SearchController extends Controller
     public function SearchPerson(Request $request)
     {
 
-        $request->validate([
-            /** @query */
-            'user_id' => 'required|string|max:36',
-            /** @query */
-            'school_address_district' => 'required|string|max:200',
-            /** @query */
-            'school_address_block' => 'nullable|string|max:50',
-            /** @query */
-            'school_address_vill' => 'nullable|string|max:50',
-            /** @query */
-            'school_name' => 'nullable|string|max:50'
-        ]);
+        // $request->validate([
+        //     /** @query */
+        //     'user_id' => 'required|string|max:36',
+        //     /** @query */
+        //     'school_address_district' => 'required|string|max:200',
+        //     /** @query */
+        //     'school_address_block' => 'nullable|string|max:50',
+        //     /** @query */
+        //     'school_address_vill' => 'nullable|string|max:50',
+        //     /** @query */
+        //     'school_name' => 'nullable|string|max:50'
+        // ]);
 
         $userId = $request->user_id;
+
+        $amount_per_person = "";
+        $paymentConfig = PaymentConfig::where('is_delete', 0)->first();
+        if(empty($paymentConfig)){
+            $amount_per_person = "25";
+        }
+        else{
+            $amount_per_person = $paymentConfig->amount_per_person;
+        }
+
 
         // Build the query dynamically using the 'when' method
         $query = UserDetails::query()
@@ -58,15 +69,18 @@ class SearchController extends Controller
         $results = $query->get();
 
         // Transform the results to mask the name field
-        $maskedResults = $results->transform(function ($item) {
+        $maskedResults = $results->transform(function ($item) use ($amount_per_person) {
 
+            $item->is_paid = is_null($item->payment_id) ? 0 : 1;
+            $item->pay_to_view_amount = $amount_per_person;
+            
             if (is_null($item->payment_id)) {
                 $item->name = $this->maskParameter($item->name);
                 $item->email = $this->maskParameter($item->email);
                 $item->phone = $this->maskParameter($item->phone);
                 $item->employee_code = $this->maskParameter($item->employee_code);
                 $item->school_name = $this->maskParameter($item->school_name);
-                $item->ucide_code = $this->maskParameter($item->ucide_code);
+                $item->udice_code = $this->maskParameter($item->udice_code);
                 $item->school_address_vill = $this->maskParameter($item->school_address_vill);
             }
             
@@ -93,12 +107,12 @@ class SearchController extends Controller
     public function ViewPersonDetails(Request $request)
     {
 
-        $request->validate([
-            /** @query */
-            'user_id' => 'required|string|max:36',
-            /** @query */
-            'person_user_id' => 'required|string|max:36',
-        ]);
+        // $request->validate([
+        //     /** @query */
+        //     'user_id' => 'required|string|max:36',
+        //     /** @query */
+        //     'person_user_id' => 'required|string|max:36',
+        // ]);
 
         $userId = $request->user_id;
 
