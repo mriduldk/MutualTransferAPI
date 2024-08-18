@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use App\Models\Payment;
 use App\Models\PaymentConfig;
+use App\Models\Wallet;
 
 class PaymentController extends Controller
 {
@@ -30,6 +31,7 @@ class PaymentController extends Controller
         ]);
 
         $paymentOld = Payment::where('payment_done_by', $request->payment_done_by)->where('payment_done_for', $request->payment_done_for)->first();
+        $wallet = Wallet::where('is_delete', 0)->where('fk_user_id', $request->payment_done_by)->first();
 
         $paymentConfig = PaymentConfig::where('is_delete', 0)->first();
         
@@ -49,6 +51,22 @@ class PaymentController extends Controller
             ]);
         }
 
+        if(empty($wallet)) {
+            return response()->json([
+                'message' => 'No wallet amount. Please add your wallet amount first.',
+                'status' => 403,
+                'payment' => null
+            ]);
+        }
+
+        if($wallet->total_amount < $paymentConfig->amount_per_person) {
+            return response()->json([
+                'message' => 'No sufficiant balance in wallet.',
+                'status' => 403,
+                'payment' => null
+            ]);
+        }
+
         if(empty($paymentOld)){
 
             $payment = new Payment();
@@ -62,6 +80,17 @@ class PaymentController extends Controller
             $payment->created_on = Carbon::now()->toDateTimeString();
 
             $payment->save();
+
+
+
+            $wallet->total_amount = $wallet->total_amount - $paymentConfig->amount_per_person;
+            $wallet->expired_on = Carbon::now()->toDateTimeString();
+
+            $wallet->modified_by = $request->payment_done_by;
+            $wallet->modified_on = Carbon::now()->toDateTimeString();
+
+            $wallet->save();
+
 
             return response()->json([
                 'message' => 'Payment Done',
