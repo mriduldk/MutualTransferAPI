@@ -54,7 +54,7 @@ class PaymentController extends Controller
         if(empty($wallet)) {
             return response()->json([
                 'message' => 'No wallet amount. Please add your wallet amount first.',
-                'status' => 403,
+                'status' => 409,
                 'payment' => null
             ]);
         }
@@ -62,7 +62,7 @@ class PaymentController extends Controller
         if($wallet->total_amount < $paymentConfig->amount_per_person) {
             return response()->json([
                 'message' => 'No sufficiant balance in wallet.',
-                'status' => 403,
+                'status' => 409,
                 'payment' => null
             ]);
         }
@@ -103,7 +103,7 @@ class PaymentController extends Controller
 
             return response()->json([
                 'message' => 'Already Paid',
-                'status' => 403,
+                'status' => 409,
                 'payment' => null
             ]);
 
