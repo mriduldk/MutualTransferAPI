@@ -12,6 +12,7 @@ use \Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str;
 use App\Models\Payment;
+use App\Models\PaymentConfig;
 
 class PaymentController extends Controller
 {
@@ -30,6 +31,23 @@ class PaymentController extends Controller
 
         $paymentOld = Payment::where('payment_done_by', $request->payment_done_by)->where('payment_done_for', $request->payment_done_for)->first();
 
+        $paymentConfig = PaymentConfig::where('is_delete', 0)->first();
+        
+        if(empty($paymentConfig)) {
+            return response()->json([
+                'message' => 'Payment Amount Unableable. Please contact admin.',
+                'status' => 403,
+                'payment' => null
+            ]);
+        }
+
+        if($paymentConfig->amount_per_person != $request->amount){
+            return response()->json([
+                'message' => 'Payment Amount Mismatch ',
+                'status' => 403,
+                'payment' => null
+            ]);
+        }
 
         if(empty($paymentOld)){
 

@@ -115,6 +115,15 @@ class SearchController extends Controller
         // ]);
 
         $userId = $request->user_id;
+        $amount_per_person = "";
+        $paymentConfig = PaymentConfig::where('is_delete', 0)->first();
+        if(empty($paymentConfig)){
+            $amount_per_person = "25";
+        }
+        else{
+            $amount_per_person = $paymentConfig->amount_per_person;
+        }
+
 
         // Build the query dynamically using the 'when' method
         $results = UserDetails::query()
@@ -127,6 +136,9 @@ class SearchController extends Controller
 
 
         if ($results) {
+
+            $results->is_paid = is_null($results->payment_id) ? 0 : 1;
+            $results->pay_to_view_amount = $amount_per_person;
 
             // Transform the results to mask the name field
             if (is_null($results->payment_id)) {
