@@ -150,7 +150,7 @@ class SearchController extends Controller
             return response()->json([
                 'message' => 'No matching records found',
                 'status' => 404,
-                'personDetails' => []
+                'personDetails' => null
             ]);
         }
         
