@@ -32,6 +32,10 @@ return new class extends Migration
             $table->string('school_address_state', 20)->nullable();
             $table->string('school_address_pin', 6)->nullable();
 
+            $table->string('preferred_district_1', 100)->nullable();
+            $table->string('preferred_district_2', 100)->nullable();
+            $table->string('preferred_district_3', 100)->nullable();
+
             $table->timestamp('created_on')->nullable();
             $table->string('created_by')->nullable();
             $table->timestamp('modified_on')->nullable();

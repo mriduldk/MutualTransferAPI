@@ -46,6 +46,7 @@ Route::controller(UserDetailsController::class)->prefix('userDetails')->group(fu
     Route::post('savePersonalInformation', 'SaveUserPersonalInformation');
     Route::post('SaveUserEmployeeDetails', 'SaveUserEmployeeDetails');
     Route::post('SaveUserSchoolDetails', 'SaveUserSchoolDetails');
+    Route::post('SaveUserPreferredDistrict', 'SaveUserPreferredDistrict');
     Route::post('ChangeActivelyLookingStatus', 'ChangeActivelyLookingStatus');
 });
 

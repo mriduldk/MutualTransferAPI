@@ -228,6 +228,52 @@ class UserDetailsController extends Controller
         }
     }
 
+    public function SaveUserPreferredDistrict(Request $request)
+    {
+
+        $request->validate([
+            /** @query */
+            'user_id' => 'required|string|max:36',
+            /** @query */
+            'preferred_district_1' => 'required|string|max:100',
+            /** @query */
+            'preferred_district_2' => 'required|string|max:100',
+            /** @query */
+            'preferred_district_3' => 'required|string|max:100',
+        ]);
+
+        $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $request->user_id)->first();
+
+
+        if(empty($userDetails)){
+
+            return response()->json([
+                'message' => 'User Details Not Found',
+                'status' => 400,
+                'userDetails' => null
+            ]);
+
+        }
+        else{
+
+            $userDetails->preferred_district_1 = $request->preferred_district_1;
+            $userDetails->preferred_district_2 = $request->preferred_district_2;
+            $userDetails->preferred_district_3 = $request->preferred_district_3;
+
+            $userDetails->modified_by = $request->user_id;
+            $userDetails->modified_on = Carbon::now()->toDateTimeString();
+
+            $userDetails->save();
+
+            return response()->json([
+                'message' => 'User Details updated successfully',
+                'status' => 200,
+                'userDetails' => $userDetails
+            ]);
+
+        }
+    }
+
     public function ChangeActivelyLookingStatus(Request $request)
     {
 
