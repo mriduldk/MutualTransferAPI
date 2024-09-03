@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment_configs', function (Blueprint $table) {
+        Schema::create('coin_transactions', function (Blueprint $table) {
             $table->id();
 
-            $table->integer('amount_per_person');
+            $table->integer('coin_amount')->nullable();
 
-            $table->integer('referral_amount_for_giver');
-            $table->integer('referral_amount_for_taker');
+            $table->string('transaction_message', 1000)->nullable();
+            $table->string('transaction_done_for', 36)->nullable();
+            $table->string('transaction_type', 30)->nullable();
+            $table->string('transaction_category', 30)->nullable();
             
             $table->timestamp('created_on')->nullable();
             $table->string('created_by')->nullable();
@@ -34,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment_configs');
+        Schema::dropIfExists('coin_transactions');
     }
 };

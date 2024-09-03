@@ -36,6 +36,10 @@ return new class extends Migration
             $table->string('preferred_district_2', 100)->nullable();
             $table->string('preferred_district_3', 100)->nullable();
 
+            $table->string('my_referral_code', 100)->nullable();
+            $table->boolean('is_referral_code_used')->nullable()->default(false);
+            $table->string('used_referral_code', 100)->nullable();
+
             $table->timestamp('created_on')->nullable();
             $table->string('created_by')->nullable();
             $table->timestamp('modified_on')->nullable();

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use \Carbon\Carbon;
 use App\Models\User;
+use App\Models\PaymentConfig;
 use Illuminate\Support\Str;
 
 use App\Models\UserDetails;
@@ -314,6 +315,84 @@ class UserDetailsController extends Controller
         }
     }
 
+    public function UseReferralCode(Request $request)
+    {
+
+        $request->validate([
+            /** @query */
+            'user_id' => 'required|string|max:36',
+            /** @query */
+            'referral_code' => 'required|string|max:10',
+        ]);
+
+        $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $request->user_id)->first();
+
+        if(empty($userDetails)){
+
+            return response()->json([
+                'message' => 'User Details Not Found',
+                'status' => 400,
+                'userDetails' => null
+            ]);
+
+        }
+        else if($userDetails->is_referral_code_used){
+
+            return response()->json([
+                'message' => 'You have already use referral code. You can only use once.',
+                'status' => 403,
+                'userDetails' => null
+            ]);
+
+        }
+        else{
+
+            $userDetailsWithReferralCode = UserDetails::where('is_delete', 0)->where('my_referral_code', $request->referral_code)->first();
+
+            if(empty($userDetailsWithReferralCode)) {
+
+                return response()->json([
+                    'message' => 'Referral Code is not valid.',
+                    'status' => 403,
+                    'userDetails' => null
+                ]);
+
+            }
+            else{
+
+                $userDetails->used_referral_code = $request->referral_code;
+                $userDetails->is_referral_code_used = 1;
+    
+                $userDetails->modified_by = $request->user_id;
+                $userDetails->modified_on = Carbon::now()->toDateTimeString();
+    
+                $userDetails->save();
+    
+
+                $paymentConfig = PaymentConfig::first();
+                //$paymentConfig = PaymentConfig::where('is_delete', 0)->first();
+
+                // Call UpdateWalletAmount method from WalletController
+                $walletController = new WalletController();
+                $walletController->UpdateWalletAmount($userDetailsWithReferralCode->fk_user_id, $paymentConfig->referral_amount_for_giver);
+                $walletController->UpdateWalletAmount($request->user_id, $paymentConfig->referral_amount_for_taker);
+
+                // coin transaction
+                $coinTransactionController = new CoinTransactionController();
+                $coinTransactionController->InsertCoinTransaction($userDetailsWithReferralCode->fk_user_id, $paymentConfig->referral_amount_for_giver, $paymentConfig->referral_amount_for_giver . ' coin credited for referral.', 'CREDIT', 'REFERRAL');
+                $coinTransactionController->InsertCoinTransaction($request->user_id, $paymentConfig->referral_amount_for_taker, $paymentConfig->referral_amount_for_taker . ' coin credited for referral.', 'CREDIT', 'REFERRAL');
+
+
+                return response()->json([
+                    'message' => 'Referral code used successfully',
+                    'status' => 200,
+                    'userDetails' => $userDetails
+                ]);
+
+            }
+
+        }
+    }
     
 
 }
