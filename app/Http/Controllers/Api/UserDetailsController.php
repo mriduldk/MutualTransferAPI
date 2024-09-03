@@ -13,6 +13,8 @@ use App\Models\PaymentConfig;
 use Illuminate\Support\Str;
 
 use App\Models\UserDetails;
+use App\Http\Controllers\API\WalletController;
+use App\Http\Controllers\API\CoinTransactionController;
 
 
 class UserDetailsController extends Controller
