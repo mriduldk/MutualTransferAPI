@@ -19,6 +19,8 @@ return new class extends Migration
             $table->integer('referral_amount_for_giver');
             $table->integer('referral_amount_for_taker');
             
+            $table->integer('registration_amount');
+
             $table->timestamp('created_on')->nullable();
             $table->string('created_by')->nullable();
             $table->timestamp('modified_on')->nullable();

@@ -10,6 +10,11 @@ use \Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str;
 
+use App\Models\PaymentConfig;
+use App\Http\Controllers\Api\WalletController;
+use App\Http\Controllers\Api\CoinTransactionController;
+
+
 class AuthController extends Controller
 {
     
@@ -38,6 +43,16 @@ class AuthController extends Controller
             $user->otp_valid_upto = Carbon::now()->addMinutes(10)->toDateTimeString();
     
             $user->save();
+
+
+            $paymentConfig = PaymentConfig::first();
+
+            $walletController = new WalletController();
+            $walletController->UpdateWalletAmount($user->user_id, $paymentConfig->registration_amount);
+
+            $coinTransactionController = new CoinTransactionController();
+            $coinTransactionController->InsertCoinTransaction($user->user_id, $paymentConfig->registration_amount, $paymentConfig->registration_amount . ' coin credited for registration bonus.', 'CREDIT', 'SIGNUP');
+
 
             return response()->json([
                 'message' => 'User created successfully',

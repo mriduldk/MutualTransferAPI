@@ -15,6 +15,8 @@ use App\Models\Payment;
 use App\Models\PaymentConfig;
 use App\Models\Wallet;
 
+use App\Http\Controllers\Api\CoinTransactionController;
+
 class PaymentController extends Controller
 {
     
@@ -69,6 +71,8 @@ class PaymentController extends Controller
 
         if(empty($paymentOld)){
 
+
+            // Save Payment 
             $payment = new Payment();
 
             $payment->payment_id = Str::uuid()->toString();
@@ -82,7 +86,7 @@ class PaymentController extends Controller
             $payment->save();
 
 
-
+            // Update Wallet
             $wallet->total_amount = $wallet->total_amount - $paymentConfig->amount_per_person;
             $wallet->expired_on = Carbon::now()->toDateTimeString();
 
@@ -90,6 +94,11 @@ class PaymentController extends Controller
             $wallet->modified_on = Carbon::now()->toDateTimeString();
 
             $wallet->save();
+
+
+            // Save coin transaction
+            $coinTransactionController = new CoinTransactionController();
+            $coinTransactionController->InsertCoinTransaction($request->payment_done_by, $paymentConfig->amount_per_person, $paymentConfig->amount_per_person . ' coin debited for profile view.', 'DEBIT', 'PROFILE VIEW');
 
 
             return response()->json([

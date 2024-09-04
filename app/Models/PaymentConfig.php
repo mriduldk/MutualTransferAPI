@@ -13,6 +13,7 @@ class PaymentConfig extends Model
         'amount_per_person',
         'referral_amount_for_giver',
         'referral_amount_for_taker',
+        'registration_amount',
         'created_on',
         'created_by',
         'modified_on',
