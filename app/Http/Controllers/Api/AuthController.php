@@ -133,10 +133,14 @@ class AuthController extends Controller
                     $user->fcm_token = $request->fcm_token;
                     $user->save();
                     
+
+                    $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $user->user_id)->first();
+
                     return response()->json([
                         'message' => 'OTP verified successfully',
                         'status' => 200,
-                        'user' => $user
+                        'user' => $user,
+                        'userDetails' => $userDetails
                     ]);
 
                 }
