@@ -60,6 +60,8 @@ class UserDetailsController extends Controller
                 $userDetailsNew->phone = $user->phone;
                 $userDetailsNew->gender = $request->gender;
                 $userDetailsNew->fk_user_id = $request->user_id;
+
+                $userDetailsNew->my_referral_code = $this->GenerateReferralCode();
     
                 $userDetailsNew->created_by = $request->user_id;
                 $userDetailsNew->created_on = Carbon::now()->toDateTimeString();
@@ -396,5 +398,22 @@ class UserDetailsController extends Controller
         }
     }
     
+    private function GenerateReferralCode() {
+
+        $randomString = Str::random(6);
+
+        $randomString = strtoupper(preg_replace('/[^A-Z0-9]/', '', $randomString));
+        
+        while (strlen($randomString) < 6) {
+            $randomString .= strtoupper(Str::random(6 - strlen($randomString)));
+            $randomString = strtoupper(preg_replace('/[^A-Z0-9]/', '', $randomString));
+        }
+        
+        $randomString = substr($randomString, 0, 6);
+
+        return $randomString;
+    }
+
+
 
 }
