@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use \Carbon\Carbon;
 use App\Models\User;
+use App\Models\UserDetails;
 use App\Models\Wallet;
 use Illuminate\Support\Str;
 
@@ -48,5 +49,37 @@ class WalletController extends Controller
 
     }
 
+    public function GetWalletDataByUser(Request $request)
+    {
+
+        $request->validate([
+            /** @query */
+            'user_id' => 'required|string|max:36',
+        ]);
+
+        $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $request->user_id)->first();
+
+
+        if(!empty($userDetails)){
+
+            $wallet = Wallet::with(['coinTransactions'])->where('is_delete', 0)->where('fk_user_id', $request->user_id)->first();
+
+            return response()->json([
+                'message' => 'User Details saved successfully',
+                'status' => 200,
+                'wallet' => $wallet
+            ]);
+
+        }
+        else{
+
+            return response()->json([
+                'message' => 'User Not Found.',
+                'status' => 400,
+                'wallet' => null
+            ]);
+
+        }
+    }
     
 }

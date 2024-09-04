@@ -26,5 +26,9 @@ class Wallet extends Model
         'is_delete'
     ];
 
+    public function coinTransactions()
+    {
+        return $this->hasMany(CoinTransaction::class, 'transaction_done_for', 'fk_user_id');
+    }
 
 }

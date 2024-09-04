@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\PaymentHistoryController;
 use App\Http\Controllers\Api\WalletOfferController;
 use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\BlockController;
+use App\Http\Controllers\Api\WalletController;
 
 
 
@@ -68,6 +69,10 @@ Route::controller(PaymentHistoryController::class)->prefix('paymentHistory')->gr
 
 Route::controller(WalletOfferController::class)->prefix('walletOffer')->group(function () {
     Route::post('GetWalletOffers', 'GetWalletOffers');
+});
+
+Route::controller(WalletController::class)->prefix('wallet')->group(function () {
+    Route::post('GetWalletDataByUser', 'GetWalletDataByUser');
 });
 
 Route::controller(DistrictController::class)->prefix('district')->group(function () {
