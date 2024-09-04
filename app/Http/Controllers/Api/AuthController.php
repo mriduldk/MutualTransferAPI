@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use \Carbon\Carbon;
 use App\Models\User;
+use App\Models\UserDetails;
 use Illuminate\Support\Str;
 
 use App\Models\PaymentConfig;
