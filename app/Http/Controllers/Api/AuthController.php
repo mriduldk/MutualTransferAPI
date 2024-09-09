@@ -119,41 +119,57 @@ class AuthController extends Controller
             }
             else{
 
-                if($user->otp_valid_upto >= Carbon::now()->addMinutes(10)->toDateTimeString()){
 
-                    return response()->json([
-                        'message' => 'OTP is expired. Please resend OTP.',
-                        'status' => 403,
-                        'user' => null
-                    ]);
-                }
+                $user->is_active = 1;
+                $user->fcm_token = $request->fcm_token;
+                $user->save();
+                
 
-                if($user->otp == $request->otp){
+                $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $user->user_id)->first();
 
-                    $user->is_active = 1;
-                    $user->fcm_token = $request->fcm_token;
-                    $user->save();
+                return response()->json([
+                    'message' => 'OTP verified successfully',
+                    'status' => 200,
+                    'user' => $user,
+                    'userDetails' => $userDetails
+                ]);
+
+
+                // if($user->otp_valid_upto >= Carbon::now()->addMinutes(10)->toDateTimeString()){
+
+                //     return response()->json([
+                //         'message' => 'OTP is expired. Please resend OTP.',
+                //         'status' => 403,
+                //         'user' => null
+                //     ]);
+                // }
+
+                // if($user->otp == $request->otp){
+
+                //     $user->is_active = 1;
+                //     $user->fcm_token = $request->fcm_token;
+                //     $user->save();
                     
 
-                    $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $user->user_id)->first();
+                //     $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $user->user_id)->first();
 
-                    return response()->json([
-                        'message' => 'OTP verified successfully',
-                        'status' => 200,
-                        'user' => $user,
-                        'userDetails' => $userDetails
-                    ]);
+                //     return response()->json([
+                //         'message' => 'OTP verified successfully',
+                //         'status' => 200,
+                //         'user' => $user,
+                //         'userDetails' => $userDetails
+                //     ]);
 
-                }
-                else{
+                // }
+                // else{
 
-                    return response()->json([
-                        'message' => 'Invalid OTP. Try again.',
-                        'status' => 403,
-                        'user' => null
-                    ]);
+                //     return response()->json([
+                //         'message' => 'Invalid OTP. Try again.',
+                //         'status' => 403,
+                //         'user' => null
+                //     ]);
 
-                }
+                // }
                 
             }
         }
