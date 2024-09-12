@@ -349,6 +349,15 @@ class UserDetailsController extends Controller
             ]);
 
         }
+        else if($userDetails->my_referral_code == $request->referral_code){
+
+            return response()->json([
+                'message' => 'You can not use your own referral code.',
+                'status' => 403,
+                'userDetails' => null
+            ]);
+
+        }
         else{
 
             $userDetailsWithReferralCode = UserDetails::where('is_delete', 0)->where('my_referral_code', $request->referral_code)->first();
