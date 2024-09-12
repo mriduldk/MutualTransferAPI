@@ -23,16 +23,16 @@ class UserDetailsController extends Controller
     public function SaveUserPersonalInformation(Request $request)
     {
 
-        // $request->validate([
-        //     /** @query */
-        //     'user_id' => 'required|string|max:36',
-        //     /** @query */
-        //     'name' => 'required|string|max:200',
-        //     /** @query */
-        //     'email' => 'string|max:50',
-        //     /** @query */
-        //     'gender' => 'required|string|max:6'
-        // ]);
+        $request->validate([
+            /** @query */
+            'user_id' => 'required|string|max:36',
+            /** @query */
+            'name' => 'required|string|max:200',
+            /** @query */
+            'email' => 'nullable|string|max:50',
+            /** @query */
+            'gender' => 'required|string|max:6'
+        ]);
 
         $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $request->user_id)->first();
 
@@ -99,18 +99,18 @@ class UserDetailsController extends Controller
     public function SaveUserEmployeeDetails(Request $request)
     {
 
-        // $request->validate([
-        //     /** @query */
-        //     'user_id' => 'required|string|max:36',
-        //     /** @query */
-        //     'employee_code' => 'required|string|max:200',
-        //     /** @query */
-        //     'school_type' => 'required|string|max:50',
-        //     /** @query */
-        //     'teacher_type' => 'required|string|max:50',
-        //     /** @query */
-        //     'subject_type' => 'string|max:50'
-        // ]);
+        $request->validate([
+            /** @query */
+            'user_id' => 'required|string|max:36',
+            /** @query */
+            'employee_code' => 'required|string|max:200',
+            /** @query */
+            'school_type' => 'required|string|max:50',
+            /** @query */
+            'teacher_type' => 'required|string|max:50',
+            /** @query */
+            'subject_type' => 'nullable|string|max:50'
+        ]);
 
         $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $request->user_id)->first();
 
@@ -178,24 +178,24 @@ class UserDetailsController extends Controller
     public function SaveUserSchoolDetails(Request $request)
     {
 
-        // $request->validate([
-        //     /** @query */
-        //     'user_id' => 'required|string|max:36',
-        //     /** @query */
-        //     'school_name' => 'required|string|max:200',
-        //     /** @query */
-        //     'udice_code' => 'required|string|max:50',
-        //     /** @query */
-        //     'school_address_vill' => 'required|string|max:100',
-        //     /** @query */
-        //     'school_address_district' => 'required|string|max:50',
-        //     /** @query */
-        //     'school_address_block' => 'required|string|max:50',
-        //     /** @query */
-        //     'school_address_state' => 'required|string|max:50',
-        //     /** @query */
-        //     'school_address_pin' => 'required|string|max:6'
-        // ]);
+        $request->validate([
+            /** @query */
+            'user_id' => 'required|string|max:36',
+            /** @query */
+            'school_name' => 'required|string|max:200',
+            /** @query */
+            'udice_code' => 'required|string|max:50',
+            /** @query */
+            'school_address_vill' => 'required|string|max:100',
+            /** @query */
+            'school_address_district' => 'required|string|max:50',
+            /** @query */
+            'school_address_block' => 'required|string|max:50',
+            /** @query */
+            'school_address_state' => 'required|string|max:50',
+            /** @query */
+            'school_address_pin' => 'required|string|max:6'
+        ]);
 
         $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $request->user_id)->first();
 
@@ -236,16 +236,16 @@ class UserDetailsController extends Controller
     public function SaveUserPreferredDistrict(Request $request)
     {
 
-        // $request->validate([
-        //     /** @query */
-        //     'user_id' => 'required|string|max:36',
-        //     /** @query */
-        //     'preferred_district_1' => 'required|string|max:100',
-        //     /** @query */
-        //     'preferred_district_2' => 'required|string|max:100',
-        //     /** @query */
-        //     'preferred_district_3' => 'required|string|max:100',
-        // ]);
+        $request->validate([
+            /** @query */
+            'user_id' => 'required|string|max:36',
+            /** @query */
+            'preferred_district_1' => 'required|string|max:100',
+            /** @query */
+            'preferred_district_2' => 'nullable|string|max:100',
+            /** @query */
+            'preferred_district_3' => 'nullable|string|max:100',
+        ]);
 
         $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $request->user_id)->first();
 

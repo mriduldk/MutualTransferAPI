@@ -22,30 +22,41 @@ class SearchController extends Controller
     public function SearchPerson(Request $request)
     {
 
-        // $request->validate([
-        //     /** @query */
-        //     'user_id' => 'required|string|max:36',
-        //     /** @query */
-        //     'school_address_district' => 'required|string|max:200',
-        //     /** @query */
-        //     'school_address_block' => 'nullable|string|max:50',
-        //     /** @query */
-        //     'school_address_vill' => 'nullable|string|max:50',
-        //     /** @query */
-        //     'school_name' => 'nullable|string|max:50'
-        // ]);
+        $request->validate([
+            /** @query */
+            'user_id' => 'required|string|max:36',
+            /** @query */
+            'school_address_district' => 'required|string|max:200',
+            /** @query */
+            'school_address_block' => 'nullable|string|max:50',
+            /** @query */
+            'school_address_vill' => 'nullable|string|max:50',
+            /** @query */
+            'school_name' => 'nullable|string|max:50'
+        ]);
 
         $userId = $request->user_id;
 
-        $amount_per_person = "";
-        $paymentConfig = PaymentConfig::where('is_delete', 0)->first();
-        if(empty($paymentConfig)){
-            $amount_per_person = "25";
+        // Retrieve the searcher's districts
+        $user = UserDetails::where('fk_user_id', $userId)->first();
+        if (!$user) {
+            return response()->json(['message' => 'User not found', 'status' => 404, 'searchResult' => []]);
         }
-        else{
-            $amount_per_person = $paymentConfig->amount_per_person;
-        }
+        
+        //$amount_per_person = "";
+        // $paymentConfig = PaymentConfig::where('is_delete', 0)->first();
+        // if(empty($paymentConfig)){
+        //     $amount_per_person = "25";
+        // }
+        // else{
+        //     $amount_per_person = $paymentConfig->amount_per_person;
+        // }
+        
+        $amount_per_person = PaymentConfig::where('is_delete', 0)->value('amount_per_person') ?? '25';
 
+        $searcherDistrict = $user->school_address_district;
+        $school_type = $user->school_type;
+        $teacher_type = $user->teacher_type;
 
         // Build the query dynamically using the 'when' method
         $query = UserDetails::query()
@@ -53,8 +64,20 @@ class SearchController extends Controller
                 $join->on('user_details.fk_user_id', '=', 'payments.payment_done_for')
                      ->where('payments.payment_done_by', '=', $userId);
             })
+            ->select('user_details.*')
+            ->selectRaw(
+                "CASE
+                    WHEN preferred_district_1 = ? OR preferred_district_2 = ? OR preferred_district_3 = ? THEN 1
+                    ELSE 0
+                 END AS district_match_flag", 
+                [$searcherDistrict, $searcherDistrict, $searcherDistrict]
+            ) // Add a flag for district match
 
             ->where('school_address_district', $request->school_address_district)
+            ->where('user_details.fk_user_id', '!=', $userId)  // Exclude current user
+            ->where('user_details.school_type', '=', $school_type)  // School Type Same
+            ->where('user_details.teacher_type', '=', $teacher_type)  // Teacher Type Same
+
             ->when($request->filled('school_address_block'), function ($q) use ($request) {
                 $q->where('school_address_block', 'like', '%' . $request->school_address_block . '%');
             })
@@ -63,7 +86,16 @@ class SearchController extends Controller
             })
             ->when($request->filled('school_name'), function ($q) use ($request) {
                 $q->where('school_name', 'like', '%' . $request->school_name . '%');
-            });
+            })
+            ->orderByRaw(
+                "CASE 
+                    WHEN preferred_district_1 = ? THEN 1
+                    WHEN preferred_district_2 = ? THEN 2
+                    WHEN preferred_district_3 = ? THEN 3
+                    ELSE 5 
+                END", [$searcherDistrict, $searcherDistrict, $searcherDistrict]
+            )
+            ->orderBy('user_details.name');
 
 
         $results = $query->get();
@@ -107,12 +139,12 @@ class SearchController extends Controller
     public function ViewPersonDetails(Request $request)
     {
 
-        // $request->validate([
-        //     /** @query */
-        //     'user_id' => 'required|string|max:36',
-        //     /** @query */
-        //     'person_user_id' => 'required|string|max:36',
-        // ]);
+        $request->validate([
+            /** @query */
+            'user_id' => 'required|string|max:36',
+            /** @query */
+            'person_user_id' => 'required|string|max:36',
+        ]);
 
         $userId = $request->user_id;
         $amount_per_person = "";
