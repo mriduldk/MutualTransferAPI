@@ -64,7 +64,7 @@ class SearchController extends Controller
                 $join->on('user_details.fk_user_id', '=', 'payments.payment_done_for')
                      ->where('payments.payment_done_by', '=', $userId);
             })
-            ->select('user_details.*')
+            ->select('user_details.*', 'payments.*')
             ->selectRaw(
                 "CASE
                     WHEN preferred_district_1 = ? OR preferred_district_2 = ? OR preferred_district_3 = ? THEN 1
