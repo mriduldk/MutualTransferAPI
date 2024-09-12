@@ -35,6 +35,8 @@ class UserDetails extends Model
         'my_referral_code',
         'is_referral_code_used',
         'used_referral_code',
+        'is_mutually_transferred',
+        'transfer_remarks',
         'created_on',
         'created_by',
         'modified_on',

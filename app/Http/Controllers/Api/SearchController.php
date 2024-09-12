@@ -77,6 +77,7 @@ class SearchController extends Controller
             ->where('user_details.fk_user_id', '!=', $userId)  // Exclude current user
             ->where('user_details.school_type', '=', $school_type)  // School Type Same
             ->where('user_details.teacher_type', '=', $teacher_type)  // Teacher Type Same
+            ->where('user_details.is_actively_looking', '=', 1)  
 
             ->when($request->filled('school_address_block'), function ($q) use ($request) {
                 $q->where('school_address_block', 'like', '%' . $request->school_address_block . '%');
