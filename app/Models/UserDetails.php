@@ -43,12 +43,14 @@ class UserDetails extends Model
         'modified_by',
         'is_delete',
         'is_actively_looking',
+        'amalgamation'
     ];
 
     protected $hidden = [
         'is_delete',
         'remember_token'
     ];
+
 
 
 }

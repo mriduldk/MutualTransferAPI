@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('user_details', function (Blueprint $table) {
             $table->boolean('is_mutually_transferred')->default(false);
             $table->string('transfer_remarks')->nullable();
+            $table->boolean('amalgamation')->default(false);
         });
     }
 

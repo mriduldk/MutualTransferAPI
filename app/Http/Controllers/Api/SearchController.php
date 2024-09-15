@@ -14,11 +14,20 @@ use Illuminate\Support\Str;
 use App\Models\UserDetails;
 use App\Models\Payment;
 use App\Models\PaymentConfig;
+use App\Services\FCMService;
 
 
 class SearchController extends Controller
 {
     
+    protected $fcmService;
+
+    public function __construct(FCMService $fcmService)
+    {
+        $this->fcmService = $fcmService;
+    }
+
+
     public function SearchPerson(Request $request)
     {
 
@@ -183,6 +192,13 @@ class SearchController extends Controller
                 $results->udice_code = $this->maskParameter($results->udice_code);
                 $results->school_address_vill = $this->maskParameter($results->school_address_vill);
             }
+
+            $userFCM = User::where('user_id', $results->fk_user_id)->first();
+            $result = $this->fcmService->sendNotificationToToken(
+                "Your Profile Was Viewed!", 
+                "Someone just checked out your profile. See who's interested!", 
+                $userFCM->fcm_token
+            );
 
             return response()->json([
                 'message' => 'Records found',

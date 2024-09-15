@@ -15,10 +15,19 @@ use Illuminate\Support\Str;
 use App\Models\UserDetails;
 use App\Http\Controllers\Api\WalletController;
 use App\Http\Controllers\Api\CoinTransactionController;
+use App\Services\FCMService;
 
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
 
 class UserDetailsController extends Controller
 {
+    protected $fcmService;
+
+    public function __construct(FCMService $fcmService)
+    {
+        $this->fcmService = $fcmService;
+    }
     
     public function SaveUserPersonalInformation(Request $request)
     {
@@ -194,7 +203,9 @@ class UserDetailsController extends Controller
             /** @query */
             'school_address_state' => 'required|string|max:50',
             /** @query */
-            'school_address_pin' => 'required|string|max:6'
+            'school_address_pin' => 'required|string|max:6',
+            /** @query */
+            'amalgamation' => 'nullable|integer'
         ]);
 
         $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $request->user_id)->first();
@@ -218,14 +229,28 @@ class UserDetailsController extends Controller
             $userDetails->school_address_block = $request->school_address_block;
             $userDetails->school_address_state = $request->school_address_state;
             $userDetails->school_address_pin = $request->school_address_pin;
+            $userDetails->amalgamation = $request->amalgamation;
 
             $userDetails->modified_by = $request->user_id;
             $userDetails->modified_on = Carbon::now()->toDateTimeString();
 
             $userDetails->save();
 
+            $result = $this->fcmService->sendNotificationToTopic(
+                "New User Alert!", 
+                "Someone new has registered in your preferred district. There could be a match with your profile. Check it out!", 
+                "PREFERRED_DISTRICT_" . str_replace(' ', '_', $request->school_address_district)
+            );
+
+            // $result = $this->fcmService->sendNotificationToToken(
+            //     "New User Alert!", 
+            //     "Someone new has registered in your preferred district. There could be a match with your profile. Check it out!", 
+            //     "fRpHIQrNQDaNhNdo_-5vkH:APA91bGFJmBZt8ZcZs9yobZnB6P9O9WkD8sY7O7toxO--c2INV8_4IiUbAfjh7pH1n_7Bnehu6Qnjv_VYPWJe_mdhhYKAPh6sW5QP0iEcXcvuIC7EPaZElEuG1p0rv-XRxkNy1odhAtu"
+            // );
+
+
             return response()->json([
-                'message' => 'User Details updated successfully',
+                'message' => 'User Details updated successfully ',
                 'status' => 200,
                 'userDetails' => $userDetails
             ]);
@@ -269,6 +294,25 @@ class UserDetailsController extends Controller
             $userDetails->modified_on = Carbon::now()->toDateTimeString();
 
             $userDetails->save();
+
+            $result = $this->fcmService->sendNotificationToTopic(
+                "New User Alert!", 
+                "Someone new has registered in your district as preferred. There could be a match with your profile. Check it out!", 
+                "SCHOOL_DISTRICT_" . str_replace(' ', '_', $request->preferred_district_1)
+            );
+
+            $result = $this->fcmService->sendNotificationToTopic(
+                "New User Alert!", 
+                "Someone new has registered in your district as preferred. There could be a match with your profile. Check it out!", 
+                "SCHOOL_DISTRICT_" . str_replace(' ', '_', $request->preferred_district_2)
+            );
+
+            $result = $this->fcmService->sendNotificationToTopic(
+                "New User Alert!", 
+                "Someone new has registered in your district as preferred. There could be a match with your profile. Check it out!", 
+                "SCHOOL_DISTRICT_" . str_replace(' ', '_', $request->preferred_district_3)
+            );
+
 
             return response()->json([
                 'message' => 'User Details updated successfully',

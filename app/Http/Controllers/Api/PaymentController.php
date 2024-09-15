@@ -14,11 +14,19 @@ use Illuminate\Support\Str;
 use App\Models\Payment;
 use App\Models\PaymentConfig;
 use App\Models\Wallet;
+use App\Services\FCMService;
 
 use App\Http\Controllers\Api\CoinTransactionController;
 
 class PaymentController extends Controller
 {
+
+    protected $fcmService;
+
+    public function __construct(FCMService $fcmService)
+    {
+        $this->fcmService = $fcmService;
+    }
     
     public function SaveUserPayForAnotherUser(Request $request)
     {
@@ -100,6 +108,14 @@ class PaymentController extends Controller
             $coinTransactionController = new CoinTransactionController();
             $coinTransactionController->InsertCoinTransaction($request->payment_done_by, $paymentConfig->amount_per_person, $paymentConfig->amount_per_person . ' coin debited for profile view.', 'DEBIT', 'PROFILE VIEW');
 
+
+
+            $userFCM = User::where('user_id', $request->payment_done_for)->first();
+            $result = $this->fcmService->sendNotificationToToken(
+                "Profile Purchase Alert!", 
+                "Someone bought and viewed your profile. Take a look to connect!", 
+                $userFCM->fcm_token
+            );
 
             return response()->json([
                 'message' => 'Payment Done',
