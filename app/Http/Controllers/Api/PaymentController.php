@@ -110,12 +110,12 @@ class PaymentController extends Controller
 
 
 
-            $userFCM = User::where('user_id', $request->payment_done_for)->first();
-            $result = $this->fcmService->sendNotificationToToken(
-                "Profile Purchase Alert!", 
-                "Someone bought and viewed your profile. Take a look to connect!", 
-                $userFCM->fcm_token
-            );
+            // $userFCM = User::where('user_id', $request->payment_done_for)->first();
+            // $result = $this->fcmService->sendNotificationToToken(
+            //     "Profile Purchase Alert!", 
+            //     "Someone bought and viewed your profile. Take a look to connect!", 
+            //     $userFCM->fcm_token
+            // );
 
             return response()->json([
                 'message' => 'Payment Done',

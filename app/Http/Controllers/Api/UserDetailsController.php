@@ -236,16 +236,10 @@ class UserDetailsController extends Controller
 
             $userDetails->save();
 
-            $result = $this->fcmService->sendNotificationToTopic(
-                "New User Alert!", 
-                "Someone new has registered in your preferred district. There could be a match with your profile. Check it out!", 
-                "PREFERRED_DISTRICT_" . str_replace(' ', '_', $request->school_address_district)
-            );
-
-            // $result = $this->fcmService->sendNotificationToToken(
+            // $result = $this->fcmService->sendNotificationToTopic(
             //     "New User Alert!", 
             //     "Someone new has registered in your preferred district. There could be a match with your profile. Check it out!", 
-            //     "fRpHIQrNQDaNhNdo_-5vkH:APA91bGFJmBZt8ZcZs9yobZnB6P9O9WkD8sY7O7toxO--c2INV8_4IiUbAfjh7pH1n_7Bnehu6Qnjv_VYPWJe_mdhhYKAPh6sW5QP0iEcXcvuIC7EPaZElEuG1p0rv-XRxkNy1odhAtu"
+            //     "PREFERRED_DISTRICT_" . str_replace(' ', '_', $request->school_address_district)
             // );
 
 
@@ -295,23 +289,23 @@ class UserDetailsController extends Controller
 
             $userDetails->save();
 
-            $result = $this->fcmService->sendNotificationToTopic(
-                "New User Alert!", 
-                "Someone new has registered in your district as preferred. There could be a match with your profile. Check it out!", 
-                "SCHOOL_DISTRICT_" . str_replace(' ', '_', $request->preferred_district_1)
-            );
+            // $result = $this->fcmService->sendNotificationToTopic(
+            //     "New User Alert!", 
+            //     "Someone new has registered in your district as preferred. There could be a match with your profile. Check it out!", 
+            //     "SCHOOL_DISTRICT_" . str_replace(' ', '_', $request->preferred_district_1)
+            // );
 
-            $result = $this->fcmService->sendNotificationToTopic(
-                "New User Alert!", 
-                "Someone new has registered in your district as preferred. There could be a match with your profile. Check it out!", 
-                "SCHOOL_DISTRICT_" . str_replace(' ', '_', $request->preferred_district_2)
-            );
+            // $result = $this->fcmService->sendNotificationToTopic(
+            //     "New User Alert!", 
+            //     "Someone new has registered in your district as preferred. There could be a match with your profile. Check it out!", 
+            //     "SCHOOL_DISTRICT_" . str_replace(' ', '_', $request->preferred_district_2)
+            // );
 
-            $result = $this->fcmService->sendNotificationToTopic(
-                "New User Alert!", 
-                "Someone new has registered in your district as preferred. There could be a match with your profile. Check it out!", 
-                "SCHOOL_DISTRICT_" . str_replace(' ', '_', $request->preferred_district_3)
-            );
+            // $result = $this->fcmService->sendNotificationToTopic(
+            //     "New User Alert!", 
+            //     "Someone new has registered in your district as preferred. There could be a match with your profile. Check it out!", 
+            //     "SCHOOL_DISTRICT_" . str_replace(' ', '_', $request->preferred_district_3)
+            // );
 
 
             return response()->json([
