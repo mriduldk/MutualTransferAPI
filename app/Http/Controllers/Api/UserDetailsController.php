@@ -462,5 +462,36 @@ class UserDetailsController extends Controller
     }
 
 
+    public function GetUserDetailsById(Request $request)
+    {
+
+        $request->validate([
+            /** @query */
+            'user_id' => 'required|string|max:36',
+            /** @query */
+            'user_phone' => 'required|string|max:36',
+        ]);
+
+        $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $request->user_id)->where('phone', $request->user_phone)->first();
+
+        if(empty($userDetails)){
+
+            return response()->json([
+                'message' => 'User Details Not Found',
+                'status' => 400,
+                'userDetails' => null
+            ]);
+
+        }
+        else{
+
+            return response()->json([
+                'message' => 'User Details fetched successfully',
+                'status' => 200,
+                'userDetails' => $userDetails
+            ]);
+
+        }
+    }
 
 }

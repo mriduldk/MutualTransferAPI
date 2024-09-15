@@ -50,6 +50,7 @@ Route::controller(UserDetailsController::class)->prefix('userDetails')->group(fu
     Route::post('SaveUserPreferredDistrict', 'SaveUserPreferredDistrict');
     Route::post('ChangeActivelyLookingStatus', 'ChangeActivelyLookingStatus');
     Route::post('UseReferralCode', 'UseReferralCode');
+    Route::post('GetUserDetailsById', 'GetUserDetailsById');
 });
 
 Route::controller(SearchController::class)->prefix('search')->group(function () {
