@@ -193,12 +193,12 @@ class SearchController extends Controller
                 $results->school_address_vill = $this->maskParameter($results->school_address_vill);
             }
 
-            $userFCM = User::where('user_id', $results->fk_user_id)->first();
-            $result = $this->fcmService->sendNotificationToToken(
-                "Your Profile Was Viewed!", 
-                "Someone just checked out your profile. See who's interested!", 
-                $userFCM->fcm_token
-            );
+            // $userFCM = User::where('user_id', $results->fk_user_id)->first();
+            // $result = $this->fcmService->sendNotificationToToken(
+            //     "Your Profile Was Viewed!", 
+            //     "Someone just checked out your profile. See who's interested!", 
+            //     $userFCM->fcm_token
+            // );
 
             return response()->json([
                 'message' => 'Records found',
