@@ -112,7 +112,7 @@ class UserDetailsController extends Controller
             /** @query */
             'user_id' => 'required|string|max:36',
             /** @query */
-            'employee_code' => 'required|string|max:200',
+            'employee_code' => 'nullable|string|max:200',
             /** @query */
             'school_type' => 'required|string|max:50',
             /** @query */
