@@ -234,8 +234,6 @@ class CurlFactory implements CurlFactoryInterface
         $version = $easy->request->getProtocolVersion();
         if ($version == 1.1) {
             $conf[\CURLOPT_HTTP_VERSION] = \CURL_HTTP_VERSION_1_1;
-        } elseif ($version == 2.0) {
-            $conf[\CURLOPT_HTTP_VERSION] = \CURL_HTTP_VERSION_2_0;
         } else {
             $conf[\CURLOPT_HTTP_VERSION] = \CURL_HTTP_VERSION_1_0;
         }

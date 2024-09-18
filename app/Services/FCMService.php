@@ -40,8 +40,11 @@ class FCMService
         $message = CloudMessage::withTarget('token', $token)
             ->withNotification(['title' => $title, 'body' => $body ]);
  
-        $messaging->send($message);
- 
-        return response()->json(['message' => 'Push notification sent successfully']);
+        try {
+            $messaging->send($message);
+            return response()->json(['message' => 'Push notification sent successfully']);
+        } catch (\Kreait\Firebase\Exception\Messaging\NotFound $e) {
+            return response()->json(['message' => 'Error: Resource not found. ' . $e->getMessage()]);
+        }
     }
 }
