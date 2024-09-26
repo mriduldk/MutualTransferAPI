@@ -52,7 +52,7 @@ class AuthController extends Controller
             $walletController->UpdateWalletAmount($user->user_id, $paymentConfig->registration_amount);
 
             $coinTransactionController = new CoinTransactionController();
-            $coinTransactionController->InsertCoinTransaction($user->user_id, $paymentConfig->registration_amount, $paymentConfig->registration_amount . ' coin credited for registration bonus.', 'CREDIT', 'SIGNUP');
+            $coinTransactionController->InsertCoinTransaction($user->user_id, $paymentConfig->registration_amount, $paymentConfig->registration_amount . ' coins credited for registration bonus.', 'CREDIT', 'SIGNUP');
 
 
             return response()->json([

@@ -107,7 +107,7 @@ class PaymentController extends Controller
 
             // Save coin transaction
             $coinTransactionController = new CoinTransactionController();
-            $coinTransactionController->InsertCoinTransaction($request->payment_done_by, $paymentConfig->amount_per_person, $paymentConfig->amount_per_person . ' coin debited for profile view.', 'DEBIT', 'PROFILE VIEW');
+            $coinTransactionController->InsertCoinTransaction($request->payment_done_by, $paymentConfig->amount_per_person, $paymentConfig->amount_per_person . ' coins debited for profile view.', 'DEBIT', 'PROFILE VIEW');
 
 
 

@@ -225,7 +225,7 @@ class OnlinePaymentController extends Controller
 
 
                     $walletController = new WalletController();
-                    $walletController->UpdateWalletAmount($request->user_id, $onlinePayment->amount / 100);
+                    $walletController->UpdateWalletAmount($request->user_id, $onlinePayment->coins);
         
                     $coinTransactionController = new CoinTransactionController();
                     $coinTransactionController->InsertCoinTransaction($request->user_id, $onlinePayment->coins, $onlinePayment->coins . ' coins purchased.', 'CREDIT', 'PURCHASED');
@@ -286,7 +286,7 @@ class OnlinePaymentController extends Controller
                     }
         
                     $walletController = new WalletController();
-                    $walletController->UpdateWalletAmount($request->user_id, $onlinePayment->amount / 100);
+                    $walletController->UpdateWalletAmount($request->user_id, $onlinePayment->coins);
         
                     $coinTransactionController = new CoinTransactionController();
                     $coinTransactionController->InsertCoinTransaction($request->user_id, $onlinePayment->coins, $onlinePayment->coins . ' coins purchased.', 'CREDIT', 'PURCHASED');

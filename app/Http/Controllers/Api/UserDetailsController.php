@@ -430,8 +430,8 @@ class UserDetailsController extends Controller
 
                 // coin transaction
                 $coinTransactionController = new CoinTransactionController();
-                $coinTransactionController->InsertCoinTransaction($userDetailsWithReferralCode->fk_user_id, $paymentConfig->referral_amount_for_giver, $paymentConfig->referral_amount_for_giver . ' coin credited for referral.', 'CREDIT', 'REFERRAL');
-                $coinTransactionController->InsertCoinTransaction($request->user_id, $paymentConfig->referral_amount_for_taker, $paymentConfig->referral_amount_for_taker . ' coin credited for referral.', 'CREDIT', 'REFERRAL');
+                $coinTransactionController->InsertCoinTransaction($userDetailsWithReferralCode->fk_user_id, $paymentConfig->referral_amount_for_giver, $paymentConfig->referral_amount_for_giver . ' coins credited for referral.', 'CREDIT', 'REFERRAL');
+                $coinTransactionController->InsertCoinTransaction($request->user_id, $paymentConfig->referral_amount_for_taker, $paymentConfig->referral_amount_for_taker . ' coins credited for referral.', 'CREDIT', 'REFERRAL');
 
 
                 return response()->json([
