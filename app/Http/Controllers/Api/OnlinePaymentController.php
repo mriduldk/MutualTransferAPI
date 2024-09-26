@@ -13,9 +13,22 @@ use App\Models\OnlinePayment;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\App;
 
+use App\Models\PaymentConfig;
+use App\Http\Controllers\Api\WalletController;
+use App\Http\Controllers\Api\CoinTransactionController;
+use App\Services\FCMService;
 
 class OnlinePaymentController extends Controller
 {
+
+    protected $fcmService;
+
+    public function __construct(FCMService $fcmService)
+    {
+        $this->fcmService = $fcmService;
+    }
+
+
     
     public function CreateOrder(Request $request) {
 
@@ -43,8 +56,8 @@ class OnlinePaymentController extends Controller
         else{
 
             $endpoint = 'https://api.razorpay.com/v1/orders';
-            $keyId = env('RAZORPAY_KEY_ID');
-            $keySecret = env('RAZORPAY_KEY_SECRET');
+            $keyId = config('app.RAZORPAY_KEY_ID');
+            $keySecret = config('app.RAZORPAY_KEY_SECRET');
             $amount = $request->amount;
             $currency = 'INR';
             $receipt = 'MT-' . $userDetails->phone . '-' . rand(1000,9999);
@@ -144,7 +157,7 @@ class OnlinePaymentController extends Controller
                 $razorpaySignature = $request->razorpay_signature;
 
                 
-                $api = new Api(env('RAZORPAY_KEY_ID'), env('RAZORPAY_KEY_SECRET'));
+                $api = new Api(config('app.RAZORPAY_KEY_ID'), config('app.RAZORPAY_KEY_SECRET'));
 
                 $attributes = [
                     'razorpay_order_id' => $onlinePayment->order_id,
@@ -168,8 +181,8 @@ class OnlinePaymentController extends Controller
 
                 $endpointOrder = 'https://api.razorpay.com/v1/orders/' . $onlinePayment->order_id;
                 $endpointPayment = 'https://api.razorpay.com/v1/payments/' . $razorpayPaymentId;
-                $keyId = env('RAZORPAY_KEY_ID');
-                $keySecret = env('RAZORPAY_KEY_SECRET');
+                $keyId = config('app.RAZORPAY_KEY_ID');
+                $keySecret = config('app.RAZORPAY_KEY_SECRET');
 
                 $client = new \GuzzleHttp\Client(
                     [
@@ -210,6 +223,20 @@ class OnlinePaymentController extends Controller
                         'attempts' => $dataOrder->attempts,
                     ]);
 
+
+                    $walletController = new WalletController();
+                    $walletController->UpdateWalletAmount($request->user_id, $onlinePayment->amount / 100);
+        
+                    $coinTransactionController = new CoinTransactionController();
+                    $coinTransactionController->InsertCoinTransaction($request->user_id, $onlinePayment->coins, $onlinePayment->coins . ' coins purchased.', 'CREDIT', 'PURCHASED');
+
+                    $userFCM = User::where('user_id', $request->user_id)->first();
+                    $this->fcmService->sendNotificationToToken(
+                        "Payment Successful", 
+                        "Successfully purchased " . $onlinePayment->coins . " coins.", 
+                        $userFCM->fcm_token
+                    );
+
                     return response()->json([
                         'message' => 'Payment Successful.',
                         'status' => 200,
@@ -249,6 +276,7 @@ class OnlinePaymentController extends Controller
                     }
         
                     if ($dataOrder2 != null) {
+
                         $onlinePayment->update([
                             'amount_paid' => $dataOrder2->amount_paid,
                             'amount_due' => $dataOrder2->amount_due,
@@ -257,6 +285,20 @@ class OnlinePaymentController extends Controller
                         ]);
                     }
         
+                    $walletController = new WalletController();
+                    $walletController->UpdateWalletAmount($request->user_id, $onlinePayment->amount / 100);
+        
+                    $coinTransactionController = new CoinTransactionController();
+                    $coinTransactionController->InsertCoinTransaction($request->user_id, $onlinePayment->coins, $onlinePayment->coins . ' coins purchased.', 'CREDIT', 'PURCHASED');
+
+                    $userFCM = User::where('user_id', $request->user_id)->first();
+                    $result = $this->fcmService->sendNotificationToToken(
+                        "Payment Successful", 
+                        "Successfully purchased " . $onlinePayment->coins . " coins.", 
+                        $userFCM->fcm_token
+                    );
+                    
+
                     if ($dataOrder->status == "paid") {
         
                         return response()->json([
