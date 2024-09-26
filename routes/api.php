@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\WalletOfferController;
 use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\BlockController;
 use App\Http\Controllers\Api\WalletController;
+use App\Http\Controllers\Api\OnlinePaymentController;
 
 
 
@@ -91,6 +92,11 @@ Route::controller(BlockController::class)->prefix('block')->group(function () {
     Route::post('GetBlocksByState', 'GetBlocksByState');
 });
 
+
+Route::controller(OnlinePaymentController::class)->prefix('onlinePayment')->group(function () {
+    Route::post('CreateOrder', 'CreateOrder');
+    Route::post('VerifyPayment', 'VerifyPayment');
+});
 
 
 
