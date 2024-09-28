@@ -350,5 +350,140 @@ class OnlinePaymentController extends Controller
 
     }
 
+    public function RefreshPaymentStatus(Request $request) {
+
+        $request->validate([
+            /** @query */
+            'online_payment_id' => 'required|string|max:36',
+            /** @query */
+            'user_id' => 'required|string|max:36',
+            /** @query */
+            'razorpay_order_id' => 'required|string|max:36',
+            /** @query */
+            'razorpay_payment_id' => 'required|string|max:36'
+        ]);
+
+        $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $request->user_id)->first();
+
+        if(empty($userDetails)){
+
+            return response()->json([
+                'message' => 'User Details Not Found',
+                'status' => 400,
+                'userDetails' => null
+            ]);
+
+        }
+        else{
+
+            $onlinePayment = OnlinePayment::where("online_payment_id", $request->online_payment_id)->first();
+
+            if(empty($onlinePayment)){
+
+                return response()->json([
+                    'message' => 'Payment Details not found',
+                    'status' => 400,
+                    'userDetails' => null
+                ]);
+    
+            }
+            else if($onlinePayment->order_id != $request->razorpay_order_id){
+
+                return response()->json([
+                    'message' => 'Payment Details Mismatch',
+                    'status' => 400,
+                    'userDetails' => null
+                ]);
+    
+            }
+            else {
+
+                $endpointOrder = 'https://api.razorpay.com/v1/orders/' . $onlinePayment->order_id;
+                $endpointPayment = 'https://api.razorpay.com/v1/payments/' . $request->razorpay_payment_id;
+
+                $keyId = config('app.RAZORPAY_KEY_ID');
+                $keySecret = config('app.RAZORPAY_KEY_SECRET');
+
+                $client = new \GuzzleHttp\Client(
+                    [
+                        'verify' => App::environment('local') ? false : true,
+                        'headers' => [
+                            'content-type' => 'application/json',
+                        ]
+                    ]
+                );
+                $responsePayment = $client->request('GET', $endpointPayment, [
+                    'auth' => [$keyId, $keySecret],
+                ]);
+                $dataPayment = json_decode($responsePayment->getBody());
+
+                $responseOrder = $client->request('GET', $endpointOrder, [
+                    'auth' => [$keyId, $keySecret],
+                ]);
+                $dataOrder = json_decode($responseOrder->getBody());
+
+
+                if ($dataPayment != null) {
+                    $onlinePayment->update([
+                        'payment_mode' => $dataPayment->method,
+                        'payment_status' => $dataPayment->status,
+                        'amount_refunded' => $dataPayment->amount_refunded,
+                        'refund_status' => $dataPayment->refund_status,
+                        'captured' => $dataPayment->captured,
+                        'card_id' => $dataPayment->card_id,
+                        'bank' => $dataPayment->bank,
+                        'wallet' => $dataPayment->wallet,
+                        'vpa' => $dataPayment->vpa,
+                        'fee' => $dataPayment->fee,
+                        'tax' => $dataPayment->tax,
+
+                        'error_code' => $dataPayment->error_code,
+                        'error_description' => $dataPayment->error_description,
+                        'error_source' => $dataPayment->error_source,
+                        'error_step' => $dataPayment->error_step,
+                        'error_reason' => $dataPayment->error_reason,
+                        'razorpay_payment_id' => $request->razorpay_payment_id,
+                    ]);
+                }
+
+                if ($dataOrder != null) {
+                    $onlinePayment->update([
+                        'amount_paid' => $dataOrder->amount_paid,
+                        'amount_due' => $dataOrder->amount_due,
+                        'status' => $dataOrder->status,
+                        'attempts' => $dataOrder->attempts,
+                    ]);
+                }
+
+                $onlinePayment->save();
+                
+
+                if ($dataOrder->status == "paid") {
+
+                    return response()->json([
+                        'message' => 'Payment Successful',
+                        'status' => 200,
+                        'onlinePayment' => $onlinePayment,
+                    ]);
+
+
+                } 
+                else {
+        
+                    return response()->json([
+                        'message' => 'Payment Processing',
+                        'status' => 200,
+                        'onlinePayment' => $onlinePayment,
+                    ]);
+
+
+                }
+
+            }
+
+        }
+
+    }
+
 
 }
