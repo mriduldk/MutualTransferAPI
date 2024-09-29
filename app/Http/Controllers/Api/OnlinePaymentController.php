@@ -350,7 +350,7 @@ class OnlinePaymentController extends Controller
 
     }
 
-    public function RefreshPaymentStatus(Request $request) {
+    public function RefreshPaymentStatusWithPaymentId(Request $request) {
 
         $request->validate([
             /** @query */
@@ -484,6 +484,142 @@ class OnlinePaymentController extends Controller
         }
 
     }
+
+    public function RefreshPaymentStatusWithOrderId(Request $request) {
+
+        $request->validate([
+            /** @query */
+            'online_payment_id' => 'required|string|max:36',
+            /** @query */
+            'user_id' => 'required|string|max:36',
+            /** @query */
+            'razorpay_order_id' => 'required|string|max:36',
+        ]);
+
+        $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $request->user_id)->first();
+
+        if(empty($userDetails)){
+
+            return response()->json([
+                'message' => 'User Details Not Found',
+                'status' => 400,
+                'userDetails' => null
+            ]);
+
+        }
+        else{
+
+            $onlinePayment = OnlinePayment::where("online_payment_id", $request->online_payment_id)->first();
+
+            if(empty($onlinePayment)){
+
+                return response()->json([
+                    'message' => 'Payment Details not found',
+                    'status' => 400,
+                    'userDetails' => null
+                ]);
+    
+            }
+            else if($onlinePayment->order_id != $request->razorpay_order_id){
+
+                return response()->json([
+                    'message' => 'Payment Details Mismatch',
+                    'status' => 400,
+                    'userDetails' => null
+                ]);
+    
+            }
+            else {
+
+                $api = new Api(config('app.RAZORPAY_KEY_ID'), config('app.RAZORPAY_KEY_SECRET'));
+                $order = $api->order->fetch($onlinePayment->order_id);
+
+                foreach ($order->payments()->items as $payment) {
+
+                    $onlinePayment->update([
+                        'entity' => $order->entity,
+                        'amount' => $order->amount,
+                        'amount_paid' => $order->amount_paid,
+                        'amount_due' => $order->amount_due,
+                        'currency' => $order->currency,
+                        'receipt' => $order->receipt,
+                        'offer_id' => $order->offer_id,
+                        'status' => $order->status,
+                        'attempts' => $order->attempts,
+                        'order_created_at' => $order->created_at,
+                        'payment_mode' => $payment->method,
+                        'payment_status' => $payment->status,
+                        'amount_refunded' => $payment->amount_refunded,
+                        'refund_status' => $payment->refund_status,
+                        'captured' => $payment->captured,
+                        'card_id' => $payment->card_id,
+                        'bank' => $payment->bank,
+                        'wallet' => $payment->wallet,
+                        'vpa' => $payment->vpa,
+                        'fee' => $payment->fee,
+                        'tax' => $payment->tax,
+                        'razorpay_payment_id' => $payment->id,
+
+                        'error_code' => $payment->error_code,
+                        'error_description' => $payment->error_description,
+                        'error_source' => $payment->error_source,
+                        'error_step' => $payment->error_step,
+                        'error_reason' => $payment->error_reason
+
+                    ]);
+
+                    if ($payment->status == "captured") {
+                        break;
+                    }
+                }
+
+                return response()->json([
+                    'message' => 'Payment Details Refreshed Successfully',
+                    'status' => 200,
+                    'onlinePayment' => $onlinePayment
+                ]);
+
+            }
+
+        }
+
+
+    }
+
+    public function GetUsersPaymentDetails(Request $request) {
+
+        $request->validate([
+            /** @query */
+            'user_id' => 'required|string|max:36',
+        ]);
+
+        $userDetails = UserDetails::where('is_delete', 0)->where('fk_user_id', $request->user_id)->first();
+
+        if(empty($userDetails)){
+
+            return response()->json([
+                'message' => 'User Details Not Found',
+                'status' => 400,
+                'userDetails' => null
+            ]);
+
+        }
+        else{
+
+            $onlinePayments = OnlinePayment::where("fk_user_id", $request->user_id)->orderBy('created_at', 'desc')->get();
+
+            return response()->json([
+                'message' => 'Payment Details Fetched Successfully',
+                'status' => 200,
+                'onlinePayments' => $onlinePayments
+            ]);
+
+        }
+
+
+
+    }
+
 
 
 }

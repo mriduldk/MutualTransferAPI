@@ -62,7 +62,10 @@ class WalletController extends Controller
 
         if(!empty($userDetails)){
 
-            $wallet = Wallet::with(['coinTransactions'])->where('is_delete', 0)->where('fk_user_id', $request->user_id)->first();
+            $wallet = Wallet::with(['coinTransactions' => function($query) {
+                $query->orderBy('created_at', 'desc'); 
+            }])
+            ->where('is_delete', 0)->where('fk_user_id', $request->user_id)->first();
 
             return response()->json([
                 'message' => 'User Details saved successfully',

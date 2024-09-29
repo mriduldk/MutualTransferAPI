@@ -96,7 +96,9 @@ Route::controller(BlockController::class)->prefix('block')->group(function () {
 Route::controller(OnlinePaymentController::class)->prefix('onlinePayment')->group(function () {
     Route::post('CreateOrder', 'CreateOrder');
     Route::post('VerifyPayment', 'VerifyPayment');
-    Route::post('RefreshPaymentStatus', 'RefreshPaymentStatus');
+    Route::post('RefreshPaymentStatusWithPaymentId', 'RefreshPaymentStatusWithPaymentId');
+    Route::post('RefreshPaymentStatusWithOrderId', 'RefreshPaymentStatusWithOrderId');
+    Route::post('GetUsersPaymentDetails', 'GetUsersPaymentDetails');
 });
 
 
