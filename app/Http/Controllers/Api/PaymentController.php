@@ -48,7 +48,7 @@ class PaymentController extends Controller
         
         if(empty($paymentConfig)) {
             return response()->json([
-                'message' => 'Payment Amount Unableable. Please contact admin.',
+                'message' => 'Payment Amount Unavailable. Please contact admin.',
                 'status' => 403,
                 'payment' => null
             ]);
@@ -129,7 +129,7 @@ class PaymentController extends Controller
 
             return response()->json([
                 'message' => 'Already Paid',
-                'status' => 409,
+                'status' => 403,
                 'payment' => null
             ]);
 
