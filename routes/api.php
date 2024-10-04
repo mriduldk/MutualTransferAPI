@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\DistrictController;
 use App\Http\Controllers\Api\BlockController;
 use App\Http\Controllers\Api\WalletController;
 use App\Http\Controllers\Api\OnlinePaymentController;
+use App\Http\Controllers\Api\SubjectController;
 
 
 
@@ -62,6 +63,7 @@ Route::controller(SearchController::class)->prefix('search')->group(function () 
 
 Route::controller(PaymentController::class)->prefix('payment')->group(function () {
     Route::post('SaveUserPayForAnotherUser', 'SaveUserPayForAnotherUser');
+    Route::post('AllPaidProfiles', 'AllPaidProfiles');
 });
 
 
@@ -99,6 +101,10 @@ Route::controller(OnlinePaymentController::class)->prefix('onlinePayment')->grou
     Route::post('RefreshPaymentStatusWithPaymentId', 'RefreshPaymentStatusWithPaymentId');
     Route::post('RefreshPaymentStatusWithOrderId', 'RefreshPaymentStatusWithOrderId');
     Route::post('GetUsersPaymentDetails', 'GetUsersPaymentDetails');
+});
+
+Route::controller(SubjectController::class)->prefix('subject')->group(function () {
+    Route::post('GetAllHighSecondarySubject', 'GetAllHighSecondarySubject');
 });
 
 

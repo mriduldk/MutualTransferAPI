@@ -16,6 +16,7 @@ use App\Models\PaymentConfig;
 use App\Models\Wallet;
 use App\Services\FCMService;
 use Razorpay\Api\Api;
+use App\Models\UserDetails;
 
 use App\Http\Controllers\Api\CoinTransactionController;
 
@@ -136,5 +137,60 @@ class PaymentController extends Controller
         }
     }
 
+    public function AllPaidProfiles(Request $request) {
+
+        $request->validate([
+            /** @query */
+            'user_id' => 'required|string|max:36',
+        ]);
+
+        $userId = $request->user_id;
+
+        // Retrieve the searcher's districts
+        $user = UserDetails::where('fk_user_id', $userId)->first();
+       
+        if (!$user) {
+            return response()->json(['message' => 'User not found', 'status' => 404, 'searchResult' => []]);
+        }
+        
+        $searcherDistrict = $user->school_address_district;
+
+        // Build the query dynamically using the 'when' method
+        $query = UserDetails::query()
+            ->join('payments', function($join) use ($userId) {
+                $join->on('user_details.fk_user_id', '=', 'payments.payment_done_for')
+                     ->where('payments.payment_done_by', '=', $userId);
+            })
+            ->select('user_details.*', 'payments.*')
+            ->selectRaw(
+                "CASE
+                    WHEN preferred_district_1 = ? OR preferred_district_2 = ? OR preferred_district_3 = ? THEN 1
+                    ELSE 0
+                 END AS district_match_flag", 
+                [$searcherDistrict, $searcherDistrict, $searcherDistrict]
+            ) // Add a flag for district match
+
+            ->where('user_details.fk_user_id', '!=', $userId)  // Exclude current user
+            ->orderBy('user_details.name');
+
+
+        $results = $query->get();
+
+        if ($results->isEmpty()) {
+            return response()->json([
+                'message' => 'No matching records found',
+                'status' => 404,
+                'searchResult' => []
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Records found',
+                'status' => 200,
+                'searchResult' => $results
+            ]);
+        }
+
+
+    }
 
 }
